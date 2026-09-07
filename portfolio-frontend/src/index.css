@@ -1,0 +1,123 @@
+@import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap");
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* -- Color system -- */
+  --color-void: #0b0e14;
+  --color-void-soft: #12161f;
+  --color-void-surface: #171c27;
+  --color-mist: #f6f7f9;
+  --color-mist-soft: #eceef2;
+  --color-mist-surface: #ffffff;
+  --color-slate: #8b93a7;
+  --color-slate-dim: #5b6274;
+  --color-signal: #4f6bff;
+  --color-signal-dim: #3a52d9;
+  --color-uptime: #22c55e;
+  --color-amber: #f5a524;
+  --color-ink: #e7e9ee;
+  --color-ink-dim: #b7bcc9;
+
+  /* -- Type -- */
+  --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-body: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-mist);
+  color: var(--color-void);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.dark body {
+  background-color: var(--color-void);
+  color: var(--color-ink);
+}
+
+::selection {
+  background-color: var(--color-signal);
+  color: white;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* thin scrollbar, developer-tool feel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--color-slate-dim);
+  border-radius: 8px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #2a3040;
+}
+
+/* Blog code-block syntax highlighting — mapped to this site's own palette
+   instead of an imported generic theme, so it matches everything else. */
+.markdown-body .hljs-keyword,
+.markdown-body .hljs-selector-tag,
+.markdown-body .hljs-literal {
+  color: var(--color-signal);
+}
+
+.markdown-body .hljs-string,
+.markdown-body .hljs-attr,
+.markdown-body .hljs-addition {
+  color: var(--color-uptime);
+}
+
+.markdown-body .hljs-number,
+.markdown-body .hljs-built_in,
+.markdown-body .hljs-type {
+  color: var(--color-amber);
+}
+
+.markdown-body .hljs-comment,
+.markdown-body .hljs-quote,
+.markdown-body .hljs-deletion {
+  color: var(--color-slate-dim);
+  font-style: italic;
+}
+.dark .markdown-body .hljs-comment,
+.dark .markdown-body .hljs-quote,
+.dark .markdown-body .hljs-deletion {
+  color: var(--color-slate);
+}
+
+.markdown-body .hljs-title,
+.markdown-body .hljs-name {
+  color: var(--color-void);
+  font-weight: 600;
+}
+.dark .markdown-body .hljs-title,
+.dark .markdown-body .hljs-name {
+  color: var(--color-ink);
+}
