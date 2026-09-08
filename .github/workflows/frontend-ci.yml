@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - "portfolio-frontend/**"
+      - "frontend/**"
   pull_request:
     branches: [main]
     paths:
-      - "portfolio-frontend/**"
+      - "frontend/**"
   workflow_dispatch:
 
 jobs:
@@ -62,7 +62,7 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
-          context: ./portfolio-frontend
+          context: ./frontend
           push: true
           # Still localhost — see this step's notes. Phase 16 revisits
           # this once a real backend URL exists.
