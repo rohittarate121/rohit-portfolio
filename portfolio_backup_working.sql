@@ -24,10 +24,11 @@ DROP TABLE IF EXISTS `blog_post_tags`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `blog_post_tags` (
   `blog_post_id` bigint NOT NULL,
-  `tag` varchar(255) NOT NULL,
-  PRIMARY KEY (`blog_post_id`, `tag`),
-  CONSTRAINT `FK9lwi4pg2kl7ce7pa3r3yotb9w`
-    FOREIGN KEY (`blog_post_id`) REFERENCES `blog_posts` (`id`)
+  `tag` varchar(255) DEFAULT NULL,
+  `tag_order` int NOT NULL,
+  PRIMARY KEY (`blog_post_id`,`tag_order`),
+  CONSTRAINT `FK9lwi4pg2kl7ce7pa3r3yotb9w` FOREIGN KEY (`blog_post_id`) REFERENCES `blog_posts` (`id`),
+  CONSTRAINT `blog_post_tags_chk_1` CHECK ((`tag_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -37,7 +38,6 @@ CREATE TABLE `blog_post_tags` (
 
 LOCK TABLES `blog_post_tags` WRITE;
 /*!40000 ALTER TABLE `blog_post_tags` DISABLE KEYS */;
-INSERT INTO `blog_post_tags` VALUES (2,'meta'),(3,'spring-boot'),(3,'react'),(3,'mysql');
 /*!40000 ALTER TABLE `blog_post_tags` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -171,10 +171,11 @@ DROP TABLE IF EXISTS `experience_responsibilities`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `experience_responsibilities` (
   `experience_id` bigint NOT NULL,
-  `responsibility` text NOT NULL,
-  PRIMARY KEY (`experience_id`, `responsibility`(255)),
-  CONSTRAINT `FKkj9lbt7aul51t05lpm7ppkbm3`
-    FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`id`)
+  `responsibility` text,
+  `responsibility_order` int NOT NULL,
+  PRIMARY KEY (`experience_id`,`responsibility_order`),
+  CONSTRAINT `FKkj9lbt7aul51t05lpm7ppkbm3` FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`id`),
+  CONSTRAINT `experience_responsibilities_chk_1` CHECK ((`responsibility_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,7 +185,7 @@ CREATE TABLE `experience_responsibilities` (
 
 LOCK TABLES `experience_responsibilities` WRITE;
 /*!40000 ALTER TABLE `experience_responsibilities` DISABLE KEYS */;
-INSERT INTO `experience_responsibilities` VALUES (2,'Performed data entry and maintained accurate records.'),(2,'Assisted in candidate sourcing and onboarding activities.'),(2,'Supported day-to-day operational tasks.'),(1,'Developed and maintained responsive web applications.'),(1,'Assisted in backend development and database integration.'),(1,'Fixed bugs and improved application functionality.');
+INSERT INTO `experience_responsibilities` VALUES (1,'Developed and maintained responsive web applications. Assisted in backend development and database integration. Fixed bugs and improved application functionality.',0),(2,'Performed data entry and maintained accurate records. Assisted in candidate sourcing and onboarding activities. Supported day-to-day operational tasks',0);
 /*!40000 ALTER TABLE `experience_responsibilities` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -197,10 +198,11 @@ DROP TABLE IF EXISTS `experience_technologies`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `experience_technologies` (
   `experience_id` bigint NOT NULL,
-  `technology` varchar(255) NOT NULL,
-  PRIMARY KEY (`experience_id`, `technology`),
-  CONSTRAINT `FKf8eyd40oy053stj3tfse0yboh`
-    FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`id`)
+  `technology` varchar(255) DEFAULT NULL,
+  `technology_order` int NOT NULL,
+  PRIMARY KEY (`experience_id`,`technology_order`),
+  CONSTRAINT `FKf8eyd40oy053stj3tfse0yboh` FOREIGN KEY (`experience_id`) REFERENCES `experiences` (`id`),
+  CONSTRAINT `experience_technologies_chk_1` CHECK ((`technology_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -210,7 +212,7 @@ CREATE TABLE `experience_technologies` (
 
 LOCK TABLES `experience_technologies` WRITE;
 /*!40000 ALTER TABLE `experience_technologies` DISABLE KEYS */;
-INSERT INTO `experience_technologies` VALUES (2,'Data Operations'),(1,'JavaScript'),(1,'HTML'),(1,'CSS'),(1,'Backend Integration');
+INSERT INTO `experience_technologies` VALUES (1,'Html, CSS, JavaScript, Node.js,',0);
 /*!40000 ALTER TABLE `experience_technologies` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -252,8 +254,10 @@ DROP TABLE IF EXISTS `project_api_endpoints`;
 CREATE TABLE `project_api_endpoints` (
   `project_id` bigint NOT NULL,
   `endpoint` varchar(255) DEFAULT NULL,
-  KEY `FKc0b7oscxmrncbvc0lehpj6kkh` (`project_id`),
-  CONSTRAINT `FKc0b7oscxmrncbvc0lehpj6kkh` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
+  `endpoint_order` int NOT NULL,
+  PRIMARY KEY (`project_id`,`endpoint_order`),
+  CONSTRAINT `FKc0b7oscxmrncbvc0lehpj6kkh` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  CONSTRAINT `project_api_endpoints_chk_1` CHECK ((`endpoint_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -263,7 +267,6 @@ CREATE TABLE `project_api_endpoints` (
 
 LOCK TABLES `project_api_endpoints` WRITE;
 /*!40000 ALTER TABLE `project_api_endpoints` DISABLE KEYS */;
-INSERT INTO `project_api_endpoints` VALUES (2,'POST /api/auth/login'),(2,'GET /api/patients'),(2,'POST /api/appointments'),(2,'GET /api/doctors/{id}'),(3,'GET /api/products'),(3,'POST /api/products'),(3,'PUT /api/products/{id}'),(3,'DELETE /api/products/{id}'),(4,'POST /api/auth/login'),(4,'GET /api/movies'),(4,'POST /api/bookings'),(4,'GET /api/bookings/{userId}');
 /*!40000 ALTER TABLE `project_api_endpoints` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -277,8 +280,10 @@ DROP TABLE IF EXISTS `project_features`;
 CREATE TABLE `project_features` (
   `project_id` bigint NOT NULL,
   `feature` text,
-  KEY `FK58okhnl0y399a1gl4kmgl44xt` (`project_id`),
-  CONSTRAINT `FK58okhnl0y399a1gl4kmgl44xt` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
+  `feature_order` int NOT NULL,
+  PRIMARY KEY (`project_id`,`feature_order`),
+  CONSTRAINT `FK58okhnl0y399a1gl4kmgl44xt` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  CONSTRAINT `project_features_chk_1` CHECK ((`feature_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -288,7 +293,7 @@ CREATE TABLE `project_features` (
 
 LOCK TABLES `project_features` WRITE;
 /*!40000 ALTER TABLE `project_features` DISABLE KEYS */;
-INSERT INTO `project_features` VALUES (2,'Microservices-based architecture using Spring Boot and React.js'),(2,'Secure RESTful APIs with JWT authentication and role-based access control'),(2,'Containerized services with Docker, deployed via Kubernetes'),(2,'CI/CD pipelines built with Jenkins'),(2,'Redis integration for performance optimization'),(2,'Deployed on Microsoft Azure'),(3,'Inventory and product management'),(3,'Stock tracking with low-stock alerts'),(3,'REST API architecture'),(4,'JWT-based authentication and role-based access control'),(4,'RESTful APIs for movie booking, seat selection, and user management'),(4,'TMDB API integration for movie data'),(4,'Stripe integration for payments'),(4,'Responsive UI with efficient state management');
+INSERT INTO `project_features` VALUES (2,'AI',0),(4,'Booking App',0);
 /*!40000 ALTER TABLE `project_features` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -302,8 +307,10 @@ DROP TABLE IF EXISTS `project_stack`;
 CREATE TABLE `project_stack` (
   `project_id` bigint NOT NULL,
   `technology` varchar(255) DEFAULT NULL,
-  KEY `FKfaqntl9w4c6rg0kiu2tckirvf` (`project_id`),
-  CONSTRAINT `FKfaqntl9w4c6rg0kiu2tckirvf` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`)
+  `stack_order` int NOT NULL,
+  PRIMARY KEY (`project_id`,`stack_order`),
+  CONSTRAINT `FKfaqntl9w4c6rg0kiu2tckirvf` FOREIGN KEY (`project_id`) REFERENCES `projects` (`id`),
+  CONSTRAINT `project_stack_chk_1` CHECK ((`stack_order` >= 0))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -313,7 +320,7 @@ CREATE TABLE `project_stack` (
 
 LOCK TABLES `project_stack` WRITE;
 /*!40000 ALTER TABLE `project_stack` DISABLE KEYS */;
-INSERT INTO `project_stack` VALUES (2,'Java'),(2,'Spring Boot'),(2,'React.js'),(2,'Microservices'),(2,'Docker'),(2,'Kubernetes'),(2,'Jenkins'),(2,'MySQL'),(3,'Node.js'),(3,'Express.js'),(3,'MySQL'),(3,'REST APIs'),(4,'React.js'),(4,'Node.js'),(4,'Express.js'),(4,'MongoDB'),(4,'JWT'),(4,'TMDB API'),(4,'Stripe');
+INSERT INTO `project_stack` VALUES (2,'Java, Spring Boot, React.js, Microservices, Docker, Kubernetes, Jenkins, MySQL, etc',0),(4,'React.js, Node.js, Express.js, MongoDB, JWT, TMDB API, Stripe',0);
 /*!40000 ALTER TABLE `project_stack` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -351,7 +358,7 @@ CREATE TABLE `projects` (
 
 LOCK TABLES `projects` WRITE;
 /*!40000 ALTER TABLE `projects` DISABLE KEYS */;
-INSERT INTO `projects` VALUES (2,'Browser -> REST API Gateway -> Spring Boot Microservices -> MySQL',NULL,'2026-08-21 09:52:44.991271','A microservices-based full-stack application for managing patients, doctors, and appointments, with secure authentication and modern DevOps deployment practices.',_binary '',NULL,'https://github.com/rohittarate121/Smart-Healthcare-Management-System',NULL,NULL,'https://smart-healthcare-management-system-weld.vercel.app/','AI-powered Electronic Health Records platform','smart-healthcare-management-system','Smart Healthcare Management System','2026-08-21 09:52:44.991271'),(3,'Browser -> REST API -> Express.js -> MySQL',NULL,'2026-08-21 09:53:01.268007','An inventory management system for B2B use cases — product management, stock tracking, and low-stock alerting, built on a REST API backend.',_binary '\0',NULL,NULL,NULL,NULL,NULL,'B2B Inventory Management System','stockflow','StockFlow','2026-08-21 09:53:01.268007'),(4,'Browser (React) -> REST API -> Express.js -> MongoDB',NULL,'2026-08-21 09:53:12.918939','A responsive movie ticket booking platform built on the MERN stack, with seat selection, authentication, and payment integration.',_binary '',NULL,'https://github.com/rohittarate121/Quickshow',NULL,NULL,'https://quickshow-sand.vercel.app/','Full-Stack Movie Ticket Booking App','quickshow','QuickShow','2026-09-01 08:58:25.743640');
+INSERT INTO `projects` VALUES (2,'Browser -> REST API Gateway -> Spring Boot Microservices -> MySQL',NULL,'2026-08-21 09:52:44.991271','A microservices-based full-stack application for managing patients, doctors, and appointments, with secure authentication and modern DevOps deployment practices.',_binary '',NULL,'https://github.com/rohittarate121/Smart-Healthcare-Management-System',NULL,NULL,'https://smart-healthcare-management-system-weld.vercel.app/','AI-powered Electronic Health Records platform','smart-healthcare-management-system','Smart Healthcare Management System','2026-09-08 18:48:43.987520'),(3,'Browser -> REST API -> Express.js -> MySQL',NULL,'2026-08-21 09:53:01.268007','An inventory management system for B2B use cases — product management, stock tracking, and low-stock alerting, built on a REST API backend.',_binary '\0',NULL,NULL,NULL,NULL,NULL,'B2B Inventory Management System','stockflow','StockFlow','2026-08-21 09:53:01.268007'),(4,'Browser (React) -> REST API -> Express.js -> MongoDB',NULL,'2026-08-21 09:53:12.918939','A responsive movie ticket booking platform built on the MERN stack, with seat selection, authentication, and payment integration.',_binary '',NULL,'https://github.com/rohittarate121/Quickshow',NULL,NULL,'https://quickshow-sand.vercel.app/','Full-Stack Movie Ticket Booking App','quickshow','QuickShow','2026-09-08 18:49:15.498213');
 /*!40000 ALTER TABLE `projects` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -444,4 +451,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-09-08 15:16:29
+-- Dump completed on 2026-09-09  0:25:21

@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 
 import java.util.ArrayList;
@@ -32,11 +33,13 @@ public class Experience {
 
     @ElementCollection
     @CollectionTable(name = "experience_responsibilities", joinColumns = @JoinColumn(name = "experience_id"))
+    @OrderColumn(name = "responsibility_order")
     @Column(name = "responsibility", columnDefinition = "TEXT")
     private List<String> responsibilities = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "experience_technologies", joinColumns = @JoinColumn(name = "experience_id"))
+    @OrderColumn(name = "technology_order")
     @Column(name = "technology")
     private List<String> technologies = new ArrayList<>();
 

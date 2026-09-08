@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OrderColumn;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -37,11 +38,13 @@ public class Project {
 
     @ElementCollection
     @CollectionTable(name = "project_stack", joinColumns = @JoinColumn(name = "project_id"))
+    @OrderColumn(name = "stack_order")
     @Column(name = "technology")
     private List<String> stack = new ArrayList<>();
 
     @ElementCollection
     @CollectionTable(name = "project_features", joinColumns = @JoinColumn(name = "project_id"))
+    @OrderColumn(name = "feature_order")
     @Column(name = "feature", columnDefinition = "TEXT")
     private List<String> features = new ArrayList<>();
 
@@ -49,6 +52,7 @@ public class Project {
 
     @ElementCollection
     @CollectionTable(name = "project_api_endpoints", joinColumns = @JoinColumn(name = "project_id"))
+    @OrderColumn(name = "endpoint_order")
     @Column(name = "endpoint")
     private List<String> apiEndpoints = new ArrayList<>();
 
