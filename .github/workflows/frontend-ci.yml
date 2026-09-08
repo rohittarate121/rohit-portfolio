@@ -1,53 +1,42 @@
-name: Backend CI
+name: Frontend CI
 
 on:
   push:
     branches: [main]
     paths:
-      - "backend/**"
+      - "frontend/**"
   pull_request:
     branches: [main]
     paths:
-      - "backend/**"
+      - "frontend/**"
   workflow_dispatch:
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
-
-    services:
-      mysql:
-        image: mysql:8.4
-        env:
-          MYSQL_ROOT_PASSWORD: root123
-          MYSQL_DATABASE: portfolio_db
-        ports:
-          - 3306:3306
-        options: >-
-          --health-cmd="mysqladmin ping -h localhost"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
     steps:
       - name: Check out code
         uses: actions/checkout@v4
 
-      - name: Set up JDK 21
-        uses: actions/setup-java@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: temurin
-          java-version: "21"
-          cache: maven
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
 
-      - name: Build and run tests
-        working-directory: ./portfolio-backend
+      - name: Install dependencies
+        working-directory: ./portfolio-frontend
+        run: npm ci
+
+      - name: Build
+        working-directory: ./portfolio-frontend
         env:
-          JWT_SECRET: ${{ secrets.JWT_SECRET }}
-        run: mvn -B test
+          VITE_API_BASE_URL: http://localhost:8080/api
+        run: npm run build
 
   package:
-    needs: build-and-test
+    needs: build
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     permissions:
@@ -70,9 +59,13 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build and push backend image
+      - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
-          context: ./backend
+          context: ./frontend
           push: true
-          tags: ghcr.io/${{ env.IMAGE_OWNER }}/portfolio-backend:latest
+          # Still localhost — see this step's notes. Phase 16 revisits
+          # this once a real backend URL exists.
+          build-args: |
+            VITE_API_BASE_URL=http://localhost:8080/api
+          tags: ghcr.io/${{ env.IMAGE_OWNER }}/portfolio-frontend:latest
