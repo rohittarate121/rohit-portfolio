@@ -62,7 +62,7 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
-          context: ./frontend
+          context: ./portfolio-frontend
           push: true
           # Still localhost — see this step's notes. Phase 16 revisits
           # this once a real backend URL exists.
