@@ -4,11 +4,11 @@ on:
   push:
     branches: [main]
     paths:
-      - "frontend/**"
+      - "portfolio-frontend/**"
   pull_request:
     branches: [main]
     paths:
-      - "frontend/**"
+      - "portfolio-frontend/**"
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: "22"
           cache: npm
-          cache-dependency-path: frontend/package-lock.json
+          cache-dependency-path: portfolio-frontend/package-lock.json
 
       - name: Install dependencies
         working-directory: ./portfolio-frontend
@@ -62,7 +62,7 @@ jobs:
       - name: Build and push frontend image
         uses: docker/build-push-action@v7
         with:
-          context: ./frontend
+          context: ./portfolio-frontend
           push: true
           # Still localhost — see this step's notes. Phase 16 revisits
           # this once a real backend URL exists.
