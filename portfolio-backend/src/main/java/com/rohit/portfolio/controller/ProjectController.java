@@ -58,4 +58,12 @@ public class ProjectController {
         projectService.deleteProject(id);
         return ResponseEntity.noContent().build();
     }
+
+    // Public, deliberately separate from the GET above — see this step's
+    // notes on why a read endpoint should never have this kind of side effect.
+    @PostMapping("/{id}/view")
+    public ResponseEntity<Void> recordView(@PathVariable Long id) {
+        projectService.incrementViewCount(id);
+        return ResponseEntity.noContent().build();
+    }
 }

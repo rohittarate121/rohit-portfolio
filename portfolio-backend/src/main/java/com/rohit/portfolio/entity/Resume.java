@@ -21,6 +21,9 @@ public class Resume {
     @Column(nullable = false)
     private String resumeUrl;
 
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long downloadCount = 0L;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
@@ -37,6 +40,14 @@ public class Resume {
 
     public void setResumeUrl(String resumeUrl) {
         this.resumeUrl = resumeUrl;
+    }
+
+    public Long getDownloadCount() {
+        return downloadCount;
+    }
+
+    public void setDownloadCount(Long downloadCount) {
+        this.downloadCount = downloadCount;
     }
 
     public LocalDateTime getUpdatedAt() {

@@ -1,5 +1,5 @@
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import Navbar from "./components/Navbar.jsx";
 import Footer from "./components/Footer.jsx";
 import Home from "./pages/Home.jsx";
@@ -26,6 +26,7 @@ import ResumeAdmin from "./pages/admin/ResumeAdmin.jsx";
 import ContactMessagesAdmin from "./pages/admin/ContactMessagesAdmin.jsx";
 import ProtectedRoute from "./components/ProtectedRoute.jsx";
 import { AuthProvider } from "./hooks/useAuth.jsx";
+import { recordSiteVisit } from "./services/analyticsService.js";
 
 function ScrollToTop() {
   const { pathname, hash } = useLocation();
@@ -46,6 +47,20 @@ function PublicLayout({ children }) {
 }
 
 export default function App() {
+  const hasTrackedVisit = useRef(false);
+
+  useEffect(() => {
+    // Fires once per real page load, not once per route change or admin
+    // page visit — the guard exists only to survive StrictMode's
+    // dev-only double-invoke; it has no effect in production.
+    if (hasTrackedVisit.current) return;
+    hasTrackedVisit.current = true;
+    recordSiteVisit().catch(() => {
+      // Silent on purpose — a failed analytics ping should never
+      // interrupt a real visitor's experience of the site.
+    });
+  }, []);
+
   return (
     <AuthProvider>
       <ScrollToTop />

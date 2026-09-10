@@ -6,6 +6,7 @@ import com.rohit.portfolio.service.ResumeService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,5 +30,11 @@ public class ResumeController {
     @PutMapping
     public ResponseEntity<ResumeResponse> updateResume(@Valid @RequestBody ResumeRequest request) {
         return ResponseEntity.ok(resumeService.updateResume(request));
+    }
+
+    @PostMapping("/download")
+    public ResponseEntity<Void> recordDownload() {
+        resumeService.incrementDownloadCount();
+        return ResponseEntity.noContent().build();
     }
 }

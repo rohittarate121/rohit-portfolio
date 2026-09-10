@@ -22,6 +22,7 @@ public record ProjectResponse(
         String challenges,
         String learnings,
         String futureImprovements,
+        Long viewCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -43,6 +44,7 @@ public record ProjectResponse(
                 project.getChallenges(),
                 project.getLearnings(),
                 project.getFutureImprovements(),
+                project.getViewCount(),
                 project.getCreatedAt(),
                 project.getUpdatedAt()
         );

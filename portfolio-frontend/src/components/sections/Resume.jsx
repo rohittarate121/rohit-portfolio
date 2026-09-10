@@ -3,7 +3,10 @@ import { Download, Eye, EyeOff, FileText } from "lucide-react";
 import Eyebrow from "../ui/Eyebrow.jsx";
 import Button from "../ui/Button.jsx";
 import Card from "../ui/Card.jsx";
-import { getResume } from "../../services/resumeService.js";
+import {
+  getResume,
+  recordResumeDownload,
+} from "../../services/resumeService.js";
 
 function formatUpdatedDate(iso) {
   if (!iso) return null;
@@ -17,7 +20,7 @@ function formatUpdatedDate(iso) {
 export default function Resume() {
   const [resumeUrl, setResumeUrl] = useState(null);
   const [updatedAt, setUpdatedAt] = useState(null);
-  const [status, setStatus] = useState("loading"); // loading | success | notset | error
+  const [status, setStatus] = useState("loading");
   const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
@@ -31,6 +34,10 @@ export default function Resume() {
         setStatus(err.response?.status === 404 ? "notset" : "error");
       });
   }, []);
+
+  const handleOpenResume = () => {
+    recordResumeDownload().catch(() => {});
+  };
 
   return (
     <section
@@ -95,6 +102,7 @@ export default function Resume() {
                   target="_blank"
                   rel="noreferrer"
                   variant="primary"
+                  onClick={handleOpenResume}
                 >
                   <Download size={16} /> Open Resume
                 </Button>

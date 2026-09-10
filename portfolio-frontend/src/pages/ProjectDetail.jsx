@@ -5,7 +5,10 @@ import { GithubIcon } from "../components/ui/BrandIcons.jsx";
 import Badge from "../components/ui/Badge.jsx";
 import Button from "../components/ui/Button.jsx";
 import Card from "../components/ui/Card.jsx";
-import { getProjectBySlug } from "../services/projectService.js";
+import {
+  getProjectBySlug,
+  recordProjectView,
+} from "../services/projectService.js";
 import { mapProjectFromApi } from "../utils/mapProject.js";
 
 const methodColor = {
@@ -26,8 +29,12 @@ export default function ProjectDetail() {
     getProjectBySlug(slug)
       .then((data) => {
         if (cancelled) return;
-        setProject(mapProjectFromApi(data));
+        const mapped = mapProjectFromApi(data);
+        setProject(mapped);
         setStatus("success");
+        // Fires once, right after a real project genuinely loaded —
+        // not on every render, not on a failed/404 lookup.
+        recordProjectView(mapped.id).catch(() => {});
       })
       .catch((err) => {
         if (cancelled) return;

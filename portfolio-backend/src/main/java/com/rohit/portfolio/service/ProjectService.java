@@ -55,6 +55,13 @@ public class ProjectService {
         projectRepository.delete(project);
     }
 
+    public void incrementViewCount(Long id) {
+        Project project = findProjectOrThrow(id);
+        Long current = project.getViewCount() != null ? project.getViewCount() : 0L;
+        project.setViewCount(current + 1);
+        projectRepository.save(project);
+    }
+
     private Project findProjectOrThrow(Long id) {
         return projectRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found with id: " + id));

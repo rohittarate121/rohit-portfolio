@@ -23,13 +23,19 @@ public class ResumeService {
         return ResumeResponse.fromEntity(resume);
     }
 
-    // Upsert: exactly one row ever exists. Update it if present, create
-    // it on the very first save otherwise — enforced here, not by the schema.
     public ResumeResponse updateResume(ResumeRequest request) {
         Resume resume = resumeRepository.findAll().stream()
                 .findFirst()
                 .orElseGet(Resume::new);
         resume.setResumeUrl(request.resumeUrl());
         return ResumeResponse.fromEntity(resumeRepository.save(resume));
+    }
+
+    public void incrementDownloadCount() {
+        resumeRepository.findAll().stream().findFirst().ifPresent(resume -> {
+            Long current = resume.getDownloadCount() != null ? resume.getDownloadCount() : 0L;
+            resume.setDownloadCount(current + 1);
+            resumeRepository.save(resume);
+        });
     }
 }

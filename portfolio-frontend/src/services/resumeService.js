@@ -9,3 +9,7 @@ export async function updateResume(resumeUrl) {
   const { data } = await apiClient.put("/resume", { resumeUrl });
   return data;
 }
+
+export async function recordResumeDownload() {
+  await apiClient.post("/resume/download");
+}

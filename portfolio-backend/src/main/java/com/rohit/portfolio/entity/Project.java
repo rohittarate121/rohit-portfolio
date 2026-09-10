@@ -73,6 +73,9 @@ public class Project {
     @Column(columnDefinition = "TEXT")
     private String futureImprovements;
 
+    @Column(nullable = false, columnDefinition = "BIGINT DEFAULT 0")
+    private Long viewCount = 0L;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;
@@ -205,6 +208,14 @@ public class Project {
 
     public void setFutureImprovements(String futureImprovements) {
         this.futureImprovements = futureImprovements;
+    }
+
+    public Long getViewCount() {
+        return viewCount;
+    }
+
+    public void setViewCount(Long viewCount) {
+        this.viewCount = viewCount;
     }
 
     public LocalDateTime getCreatedAt() {

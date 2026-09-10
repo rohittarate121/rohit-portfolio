@@ -28,3 +28,7 @@ export async function updateProject(id, projectData) {
 export async function deleteProject(id) {
   await apiClient.delete(`/projects/${id}`);
 }
+
+export async function recordProjectView(id) {
+  await apiClient.post(`/projects/${id}/view`);
+}
